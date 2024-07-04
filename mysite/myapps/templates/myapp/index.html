@@ -1,31 +1,56 @@
 {% extends 'myapp/base.html' %}
+
 {% block body %}
 <h1>This is the index Page</h1>
-<form class="shadow-lg m-10 rounded-lg" action="post">
+
+<form class="shadow-lg m-10 rounded-lg" method="post">
     {% csrf_token %}
     <div class="form-container px-10 py-10 flex">
         <div class="mx-10">
-        <div class="mb-5">
-            <label>Expense Name</label>
+            <div class="mb-5">
+                <label for="id_name">Expense Name</label>
+            </div>
+            <div class="border">{{ expense_form.name }}</div>
         </div>
-        <div class="border">{{ expense_form.name }}</div>
-    </div>
-    <div class="mx-10">
-        <div class="mb-5">
-            <label>Expense Amount</label>
+        <div class="mx-10">
+            <div class="mb-5">
+                <label for="id_amount">Expense Amount</label>
+            </div>
+            <div class="border">{{ expense_form.amount }}</div>
         </div>
-        <div class="border">{{ expense_form.amount }}</div>
-    </div>
-    <div class="mx-10">
-        <div class="mb-5">
-            <label>Expense Category</label>
+        <div class="mx-10">
+            <div class="mb-5">
+                <label for="id_category">Expense Category</label>
+            </div>
+            <div class="border">{{ expense_form.category }}</div>
         </div>
-        <div class="border">{{ expense_form.category}}</div>
-    </div>
 
-    <div class="mx-8">
-        <button class="bg-green-500 px-5 py-2 rounded-lg text-white">Add</button>
+        <div class="mx-8">
+            <button type="submit" class="bg-green-500 px-5 py-2 rounded-lg text-white">Add</button>
+        </div>
     </div>
-</div>
 </form>
+<div class="m-10 font-bold">Expenses 💵</div>
+<div class="shadow-lg m-10 rounded-lg">
+    <div class="expense-header flex flex-wrap space-x-40 px-20 py-5">
+        <span>Name</span>
+        <span>Amount</span>
+        
+        <span>Date</span>
+        <span>Category</span>
+         <span>Edit</span>
+        <span>Delete</span>
+    </div>
+    <hr >
+    {% for expense in expenses %}
+    <div class="expense-row flex flex-wrap px-20 py-5">
+        <span class="font-bold">{{ expense.name }}</span>
+        <span class="font-bold">{{ expense.amount }}</span>
+        <span class="font-bold">{{ expense.date }}</span>
+        <span class="font-bold">{{ expense.category }}</span>
+        <span class="font-bold"><a href="">Edit</a></span>
+        <span class="font-bold"><a href="">Delete</a></span>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
