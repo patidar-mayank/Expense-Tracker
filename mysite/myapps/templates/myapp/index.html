@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block body %}
-<h1>This is the index Page</h1>
+
 
 <form class="shadow-lg m-10 rounded-lg" method="post">
     {% csrf_token %}
@@ -116,6 +116,148 @@
                 {% endfor %}
             </div>
         </div>
+        <div class="w-1/2 shadow-lg m-10">
+            <div class="flex flex-wrap space-x-40 font-bold px-20 py-5">
+                <span>Categorical expenses</span>
+            </div>
+            <hr>
+            <div id="cat-sum-table">
+                {% for categorical_sum in categorical_sums %}
+                    <div class="flex flex-wrap px-20 py-5">
+                        <span>
+                            {{categorical_sum.category}}
+                        </span>
+                    </div>
+                    <div class="flex flex-wrap px-20 py-5">
+                        <span class="text-green-500">
+                            $ {{categorical_sum.sum}}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="flex">
+        <div class="w-1/2 shadow-lg ml-10">
+            <h1 class="m-10">Expense spread across categories</h1>
+            <canvas id="myChart" class="m-10"></canvas>
+        </div>
+        <div class="w-1/2 shadow-lg ml-10">
+            <h1 class="m-10">Daily Expense Sum</h1>
+            <canvas id="myChart1" class="m-10"></canvas>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+
+    <script>
+
+        const cats = []
+        const cat_sums=[]
+
+        const dates=[]
+        const sums=[]
+        
+        const catSumDiv = document.getElementById('cat-sum-table').getElementsByTagName('div');
+        
+        for(i=0;i<catSumDiv.length;i++){
+            if(i%2 ==1){
+                cat_sums.push(catSumDiv[i].innerText.replace("$",""))
+            }else{
+                cats.push(catSumDiv[i].innerText)
+            }
+        }
+
+
+        const dailySumDiv = document.getElementById('30-day-table').getElementsByTagName('div');
+        
+        for(i=0;i<dailySumDiv.length;i++){
+            if(i%2 ==1){
+                sums.push(dailySumDiv[i].innerText.replace("$",""))
+            }else{
+                dates.push(dailySumDiv[i].innerText)
+            }
+        }
+        
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: cats,
+        datasets: [{
+            label: 'Expense across categories',
+            data: cat_sums,
+            backgroundColor: [
+                'rgba(56, 137, 104, 1)',
+                'rgba(143, 177, 64, 1)',
+                 'rgba(202, 216, 73, 1)',
+                'rgba(36, 101, 141, 1)',
+                'rgba(55, 154, 134, 1)',
+                'rgba(66, 158, 176, 1)'
+                
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+
+console.log(dates)
+console.log(sums)
+var ctx1 = document.getElementById('myChart1').getContext('2d');
+var myChart1 = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+        labels: dates,
+        datasets: [{
+            label: 'Sum of daily expenses',
+            data: sums,
+            backgroundColor: [
+                'rgba(50, 19, 32, 1)',
+                'rgba(101, 40, 59, 1)',
+                'rgba(215, 168, 146, 1)',
+                'rgba(61, 121, 170, 1)',
+                'rgba(45, 83, 119, 1)',
+                'rgba(132, 69, 111, 1)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+    </script>
 
 </div>
 {% endblock %}
